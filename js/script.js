@@ -1,0 +1,10 @@
+document.addEventListener('DOMContentLoaded',()=>{
+  const loader=document.querySelector('.loader'); if(loader) setTimeout(()=>loader.classList.add('hide'),450);
+  const page=location.pathname.split('/').pop()||'index.html'; document.querySelectorAll('.nav-link').forEach(a=>{if(a.getAttribute('href')===page)a.classList.add('active')});
+  const top=document.getElementById('scrollTop'); window.addEventListener('scroll',()=>{if(top)top.style.display=scrollY>500?'grid':'none'}); if(top)top.onclick=()=>scrollTo({top:0,behavior:'smooth'});
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.1}); document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('[data-counter]').forEach(el=>{const ob=new IntersectionObserver(es=>{if(!es[0].isIntersecting)return; let n=0,t=+el.dataset.counter,step=Math.max(1,Math.ceil(t/55));const run=()=>{n=Math.min(n+step,t);el.textContent=n.toLocaleString()+(t>99?'+':'');if(n<t)requestAnimationFrame(run)};run();ob.disconnect()},{threshold:.7});ob.observe(el)});
+  document.querySelectorAll('.gallery-filter .btn').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.gallery-filter .btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const f=btn.dataset.filter;document.querySelectorAll('.gallery-item').forEach(i=>i.closest('[data-category]').style.display=f==='all'||i.closest('[data-category]').dataset.category===f?'block':'none')}));
+  document.querySelectorAll('.gallery-item').forEach(item=>item.addEventListener('click',()=>{const modal=document.getElementById('lightbox');if(modal){modal.querySelector('img').src=item.querySelector('img').src;new bootstrap.Modal(modal).show()}}));
+  document.querySelectorAll('form[data-static]').forEach(form=>form.addEventListener('submit',e=>{e.preventDefault();const msg=form.querySelector('.form-message');if(msg){msg.textContent='Thank you — your enquiry has been received. We will call you shortly.';msg.classList.remove('d-none')}form.reset()}));
+});
